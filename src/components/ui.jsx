@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+export const rupiah = (n) => `Rp ${Number(n).toLocaleString("id-ID")}`;
+
 export function BottomNav({ active, go }) {
   const tabs = [
     ["menu", "Menu", <svg key="a" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-5 w-5"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg>],
@@ -60,19 +62,18 @@ export function SearchBar() {
   );
 }
 
-export function Cats() {
-  const [a, setA] = useState(0);
+export function Cats({ cats, value, onChange }) {
   return (
     <div className="no-scrollbar flex gap-2 overflow-x-auto">
-      {[0, 1, 2, 3].map((i) => (
+      {cats.map((c) => (
         <button
-          key={i}
-          onClick={() => setA(i)}
+          key={c}
+          onClick={() => onChange(c)}
           className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold ${
-            a === i ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-500"
+            value === c ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-500"
           }`}
         >
-          Semua
+          {c}
         </button>
       ))}
     </div>
@@ -89,7 +90,7 @@ export function MenuCard({ name, price, onClick }) {
       <div className="p-2.5">
         <p className="truncate text-sm font-bold text-gray-700">{name}</p>
         <div className="mt-1.5 flex items-center justify-between">
-          <span className="text-sm font-bold text-gray-700">{price}</span>
+          <span className="text-sm font-bold text-gray-700">{rupiah(price)}</span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -105,7 +106,8 @@ export function MenuCard({ name, price, onClick }) {
   );
 }
 
-export function CartBar({ count = 2, total = "Rp 54.000", onClick }) {
+export function CartBar({ count, total, onClick }) {
+  if (count === 0) return null;
   return (
     <div className="fixed inset-x-0 bottom-[60px] z-40 px-4">
       <div className="mx-auto max-w-md">
@@ -126,22 +128,24 @@ export function CartBar({ count = 2, total = "Rp 54.000", onClick }) {
   );
 }
 
-export function Stepper() {
-  const [q, setQ] = useState(1);
+export function Stepper({ qty, setQty, small }) {
+  const cls = small ? "h-7 w-7 text-sm" : "h-8 w-8 text-base";
   return (
-    <div className="flex shrink-0 items-center gap-2.5">
+    <div className="flex shrink-0 items-center gap-2">
       <button
-        onClick={() => setQ(Math.max(1, q - 1))}
-        className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-base font-bold active:scale-90 ${
-          q > 1 ? "border-gray-500 text-gray-600" : "border-gray-200 text-gray-300"
+        onClick={() => setQty(qty - 1)}
+        className={`flex ${cls} items-center justify-center rounded-full border-2 font-bold active:scale-90 ${
+          qty > 1 ? "border-gray-500 text-gray-600" : "border-gray-200 text-gray-300"
         }`}
       >
         −
       </button>
-      <span className="w-4 text-center text-sm font-bold text-gray-700">{q}</span>
+      <span className={`w-4 text-center font-bold text-gray-700 ${small ? "text-xs" : "text-sm"}`}>
+        {qty}
+      </span>
       <button
-        onClick={() => setQ(q + 1)}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-500 text-base font-bold text-white active:scale-90"
+        onClick={() => setQty(qty + 1)}
+        className={`flex ${cls} items-center justify-center rounded-full bg-gray-500 font-bold text-white active:scale-90`}
       >
         +
       </button>
@@ -149,24 +153,29 @@ export function Stepper() {
   );
 }
 
-export function PillGroup({ label = "Lorem" }) {
-  const [a, setA] = useState(0);
+export function PillGroup({ label, options, value, onChange }) {
   return (
     <section className="px-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-bold text-gray-700">{label}</h3>
-        <span className="text-[11px] text-gray-400">Pilih</span>
+        <span className="text-[11px] text-gray-400">Pilih 1</span>
       </div>
       <div className="mt-2 flex flex-wrap gap-2">
-        {["Tidak pedas", "Sedang", "Pedas"].map((p, i) => (
+        {options.map((o) => (
           <button
-            key={p}
-            onClick={() => setA(i)}
+            key={o.id}
+            onClick={() => onChange(o.id)}
             className={`rounded-full px-4 py-2 text-xs font-semibold ${
-              a === i ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-500"
+              value === o.id ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-500"
             }`}
           >
-            {p}
+            {o.label}
+            {o.delta > 0 && (
+              <span className={value === o.id ? "text-white/70" : "text-gray-400"}>
+                {" "}
+                +{rupiah(o.delta)}
+              </span>
+            )}
           </button>
         ))}
       </div>

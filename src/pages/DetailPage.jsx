@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { ArrowLeftIcon } from "../components/icons";
-import { Stepper, PillGroup } from "../components/ui";
+import { Stepper, PillGroup, rupiah } from "../components/ui";
+import { defaultChoices, unitPrice } from "../data/menus";
 
-export default function DetailPage({ go }) {
+export default function DetailPage({ menu, go, onAdd }) {
+  const [sel, setSel] = useState(() => defaultChoices(menu));
+  const [qty, setQty] = useState(1);
+  const [note, setNote] = useState("");
+
+  const unit = unitPrice(menu, sel);
+  const total = unit * qty;
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="mx-auto max-w-md pb-32">
@@ -24,18 +32,23 @@ export default function DetailPage({ go }) {
         </div>
 
         <div className="mt-4 flex items-start justify-between gap-3 px-4">
-          <h2 className="text-xl font-extrabold leading-snug text-gray-800">Lorem ipsum</h2>
-          <span className="shrink-0 text-xl font-extrabold text-gray-700">Rp 00.000</span>
+          <h2 className="text-xl font-extrabold leading-snug text-gray-800">{menu.name}</h2>
+          <span className="shrink-0 text-xl font-extrabold text-gray-700">
+            {rupiah(menu.price)}
+          </span>
         </div>
-        <p className="mt-1.5 px-4 text-sm leading-relaxed text-gray-400">
-          Lorem ipsum dolor amet consectetur risus aliquet amet negeri
-        </p>
+        <p className="mt-1.5 px-4 text-sm leading-relaxed text-gray-400">{menu.desc}</p>
 
-        <div className="mt-5">
-          <PillGroup label="Level lorem" />
-        </div>
-        <div className="mt-5">
-          <PillGroup label="Lorem" />
+        <div className="mt-5 space-y-5">
+          {menu.options.map((g) => (
+            <PillGroup
+              key={g.id}
+              label={g.label}
+              options={g.opts}
+              value={sel[g.id]}
+              onChange={(id) => setSel({ ...sel, [g.id]: id })}
+            />
+          ))}
         </div>
 
         <section className="mt-6 px-4">
@@ -45,6 +58,8 @@ export default function DetailPage({ go }) {
           </div>
           <textarea
             rows={2}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
             placeholder="Contoh: tanpa daun bawang"
             className="mt-2 w-full resize-none rounded-2xl bg-gray-200 p-3.5 text-sm outline-none placeholder:text-gray-400"
           />
@@ -54,12 +69,12 @@ export default function DetailPage({ go }) {
       {/* Bar bawah */}
       <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white">
         <div className="mx-auto flex max-w-md items-center gap-4 p-4">
-          <Stepper />
+          <Stepper qty={qty} setQty={(q) => setQty(Math.max(1, q))} />
           <button
-            onClick={() => go("cart")}
+            onClick={() => onAdd(menu, sel, qty, note)}
             className="flex-1 rounded-full bg-gray-700 py-3.5 text-sm font-bold text-white active:scale-[0.98]"
           >
-            Tambah • Rp 00.000
+            Tambah • {rupiah(total)}
           </button>
         </div>
       </div>

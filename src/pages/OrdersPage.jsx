@@ -15,12 +15,8 @@ export default function OrdersPage({ go }) {
           <span className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-200 text-3xl">
             🧾
           </span>
-          <p className="mt-2 text-base font-extrabold text-gray-800">
-            Belum ada pesanan
-          </p>
-          <p className="text-sm text-gray-400">
-            Kamu belum mengirim pesanan ke dapur.
-          </p>
+          <p className="mt-2 text-base font-extrabold text-gray-800">Belum ada pesanan</p>
+          <p className="text-sm text-gray-400">Kamu belum mengirim pesanan ke dapur.</p>
           <button
             onClick={() => go("menu")}
             className="mt-3 rounded-full bg-gray-700 px-7 py-3 text-sm font-bold text-white active:scale-95"

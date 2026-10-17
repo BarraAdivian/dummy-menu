@@ -1,9 +1,18 @@
+import { useState } from "react";
 import { ArrowLeftIcon } from "../components/icons";
-import { Header, SearchBar, Cats, MenuCard, CartBar, BottomNav } from "../components/ui";
+import { SearchBar, Cats, MenuCard, CartBar, BottomNav, rupiah } from "../components/ui";
+import { menus } from "../data/menus";
 
-const NAMES = ["Sate Lorem", "Ayam Lorem", "Es Teh Pandan", "Pisang Lorem"];
+const CATS = ["Semua", "Makanan", "Minuman", "Camilan"];
 
-export default function AllMenuPage({ go }) {
+export default function AllMenuPage({ go, openDetail, cart }) {
+  const [cat, setCat] = useState("Semua");
+
+  const cartCount = cart.reduce((s, i) => s + i.qty, 0);
+  const cartTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+  const list = menus.filter((m) => cat === "Semua" || m.category === cat);
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="mx-auto max-w-md pb-44">
@@ -24,17 +33,17 @@ export default function AllMenuPage({ go }) {
           <SearchBar />
         </div>
         <div className="mt-3 px-4">
-          <Cats />
+          <Cats cats={CATS} value={cat} onChange={setCat} />
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3 px-4">
-          {[...NAMES, ...NAMES].map((n, i) => (
-            <MenuCard key={`${n}-${i}`} name={n} price="Rp 00.000" onClick={() => go("detail")} />
+          {list.map((m) => (
+            <MenuCard key={m.id} name={m.name} price={m.price} onClick={() => openDetail(m)} />
           ))}
         </div>
       </div>
 
-      <CartBar onClick={() => go("cart")} />
+      <CartBar count={cartCount} total={rupiah(cartTotal)} onClick={() => go("cart")} />
       <BottomNav active="menu" go={go} />
     </div>
   );

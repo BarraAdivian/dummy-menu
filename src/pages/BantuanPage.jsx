@@ -24,7 +24,7 @@ export default function BantuanPage({ go }) {
       <div className="mx-auto max-w-md pb-28">
         <header className="flex items-center justify-between px-4 pt-4">
           <h1 className="text-base font-extrabold text-gray-800">Bantuan</h1>
-          <span className="rounded-full bg-gray-300 px-3.5 py-1.5 text-[10px] font-bold text-gray-600">
+          <span className="rounded-full bg-gray-300 px-3 py-1.5 text-[10px] font-bold text-gray-600">
             Meja
           </span>
         </header>
@@ -54,10 +54,7 @@ export default function BantuanPage({ go }) {
             ["📶", "Info Wi-Fi", "Nama & kata sandi"],
             ["💬", "Lainnya", "Tulis permintaan"],
           ].map(([icon, t, d]) => (
-            <button
-              key={t}
-              className="rounded-2xl bg-white p-4 text-left active:scale-[0.97]"
-            >
+            <button key={t} className="rounded-2xl bg-white p-4 text-left active:scale-[0.97]">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-200 text-base">
                 {icon}
               </span>
@@ -67,7 +64,7 @@ export default function BantuanPage({ go }) {
           ))}
         </div>
 
-        {/* Pertanyaan umum */}
+        {/* FAQ */}
         <p className="mt-5 px-4 text-sm font-extrabold text-gray-800">Pertanyaan umum</p>
         <div className="mx-4 mt-2.5 rounded-3xl bg-white px-4">
           {FAQS.map((f, i) => {
@@ -79,9 +76,7 @@ export default function BantuanPage({ go }) {
                   className="flex w-full items-center justify-between gap-3 py-4 text-left"
                 >
                   <span className="text-sm font-bold text-gray-700">{f.q}</span>
-                  <span
-                    className={`text-gray-300 transition-transform ${aktif ? "rotate-180" : ""}`}
-                  >
+                  <span className={`text-gray-300 transition-transform ${aktif ? "rotate-180" : ""}`}>
                     ⌄
                   </span>
                 </button>

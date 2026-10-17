@@ -1,19 +1,58 @@
 import { useState } from "react";
 import { ArrowLeftIcon } from "../components/icons";
-import { Stepper } from "../components/ui";
+import { Stepper, rupiah } from "../components/ui";
+import { TAX, SERVICE } from "../data/menus";
 
-const ITEMS = [
-  { n: "Nasi Goreng Lorem", s: "Sedang", p: "Rp 42.000" },
-  { n: "Es Teh Lorem", s: "Es normal", p: "Rp 12.000" },
-];
-
-export default function CartPage({ go, onKirim }) {
+export default function CartPage({ go, cart, updateQty, removeItem, onKirim }) {
   const [pay, setPay] = useState(0);
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const tax = Math.round(subtotal * TAX);
+  const service = Math.round(subtotal * SERVICE);
+  const total = subtotal + tax + service;
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+
+  // ===== Empty state =====
+  if (cart.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-100">
+        <div className="mx-auto flex min-h-screen max-w-md flex-col">
+          <header className="flex items-center justify-between px-4 pt-4">
+            <button
+              onClick={() => go("menu")}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600 active:scale-90"
+            >
+              <ArrowLeftIcon className="h-5 w-5" />
+            </button>
+            <h1 className="text-base font-extrabold text-gray-800">
+              Keranjang &amp; Checkout
+            </h1>
+            <span className="rounded-full bg-gray-300 px-3.5 py-1.5 text-[10px] font-bold text-gray-600">
+              Meja
+            </span>
+          </header>
+
+          <div className="flex flex-1 flex-col items-center justify-center gap-2 px-8 pb-20 text-center">
+            <span className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-200 text-3xl">
+              🛒
+            </span>
+            <p className="mt-2 text-base font-extrabold text-gray-800">Keranjang masih kosong</p>
+            <p className="text-sm text-gray-400">Yuk pilih menu favoritmu dulu!</p>
+            <button
+              onClick={() => go("menu")}
+              className="mt-3 rounded-full bg-gray-700 px-7 py-3 text-sm font-bold text-white active:scale-95"
+            >
+              Lihat menu
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="mx-auto max-w-md pb-36">
-        {/* ===== Header: back + judul + meja ===== */}
         <header className="flex items-center justify-between px-4 pt-4">
           <button
             onClick={() => go("menu")}
@@ -29,31 +68,43 @@ export default function CartPage({ go, onKirim }) {
           </span>
         </header>
 
-        {/* Judul + tambah */}
         <div className="mt-4 flex items-center justify-between px-4">
-          <h2 className="text-sm font-extrabold text-gray-800">2 menu dipesan</h2>
+          <h2 className="text-sm font-extrabold text-gray-800">{count} menu dipesan</h2>
           <button
-            onClick={() => go("menu")}
+            onClick={() => go("semua")}
             className="text-xs font-bold text-gray-400 active:opacity-60"
           >
             + Tambah menu
           </button>
         </div>
 
-        {/* Items — satu kartu */}
+        {/* Items */}
         <div className="mx-4 mt-3 rounded-3xl bg-white p-4">
-          {ITEMS.map((it, i) => (
+          {cart.map((it, i) => (
             <div
-              key={it.n}
+              key={it.key}
               className={`flex items-center gap-3 py-3 ${i !== 0 ? "border-t border-gray-100" : ""}`}
             >
               <span className="h-12 w-12 shrink-0 rounded-xl bg-gray-300" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-gray-700">{it.n}</p>
-                <p className="text-[11px] text-gray-400">{it.s}</p>
-                <p className="mt-0.5 text-sm font-bold text-gray-700">{it.p}</p>
+                <p className="truncate text-sm font-bold text-gray-700">{it.name}</p>
+                {it.options.length > 0 && (
+                  <p className="truncate text-[11px] text-gray-400">
+                    {it.options.join(" • ")}
+                  </p>
+                )}
+                {it.note && <p className="truncate text-[11px] text-gray-400">📝 {it.note}</p>}
+                <p className="mt-0.5 text-sm font-bold text-gray-700">
+                  {rupiah(it.price * it.qty)}
+                </p>
               </div>
-              <Stepper />
+              <Stepper qty={it.qty} setQty={(q) => updateQty(it.key, q - it.qty)} small />
+              <button
+                onClick={() => removeItem(it.key)}
+                className="text-xs text-gray-300 active:text-red-500"
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
@@ -92,30 +143,32 @@ export default function CartPage({ go, onKirim }) {
 
         {/* Rincian */}
         <section className="mx-4 mt-5 rounded-3xl bg-white p-4">
-          {[
-            ["Subtotal", "Rp 54.000"],
-            ["Pajak PB1 (10%)", "Rp 5.400"],
-            ["Biaya layanan (5%)", "Rp 2.700"],
-          ].map(([k, v]) => (
-            <div key={k} className="flex justify-between py-1.5 text-xs">
-              <span className="text-gray-400">{k}</span>
-              <span className="font-semibold text-gray-700">{v}</span>
-            </div>
-          ))}
+          <div className="flex justify-between py-1.5 text-xs">
+            <span className="text-gray-400">Subtotal</span>
+            <span className="font-semibold text-gray-700">{rupiah(subtotal)}</span>
+          </div>
+          <div className="flex justify-between py-1.5 text-xs">
+            <span className="text-gray-400">Pajak PB1 (10%)</span>
+            <span className="font-semibold text-gray-700">{rupiah(tax)}</span>
+          </div>
+          <div className="flex justify-between py-1.5 text-xs">
+            <span className="text-gray-400">Biaya layanan (5%)</span>
+            <span className="font-semibold text-gray-700">{rupiah(service)}</span>
+          </div>
           <div className="mt-2 flex items-center justify-between border-t border-gray-100 pt-3">
             <span className="text-sm font-extrabold text-gray-800">Total</span>
-            <span className="text-lg font-extrabold text-gray-800">Rp 62.100</span>
+            <span className="text-lg font-extrabold text-gray-800">{rupiah(total)}</span>
           </div>
         </section>
       </div>
 
-      {/* Tombol kirim */}
       <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white p-4">
         <button
-          onClick={onKirim}
-          className="w-full rounded-full bg-gray-700 py-4 text-sm font-bold text-white active:scale-[0.98]"
+          onClick={() => onKirim(pay === 1 ? "qris" : "kasir")}
+          disabled={cart.length === 0}
+          className="w-full rounded-full bg-gray-700 py-4 text-sm font-bold text-white disabled:bg-gray-300 active:scale-[0.98]"
         >
-          Kirim pesanan • Rp 62.100
+          Kirim pesanan • {rupiah(total)}
         </button>
       </div>
     </div>
