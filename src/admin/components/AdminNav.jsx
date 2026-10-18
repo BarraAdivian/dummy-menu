@@ -47,8 +47,14 @@ export default function AdminNav({ page, onNav }) {
         <IcUtensils />
         {page === "menu" && <span>Menu</span>}
       </button>
-      <span className="w-10 h-10 rounded-full flex items-center justify-center text-white/40"><IcChart /></span>
-      <span className="w-10 h-10 rounded-full flex items-center justify-center text-white/40"><IcUser /></span>
+      <button onClick={() => onNav("laporan")} className={`${base} ${page === "laporan" ? "bg-[#F2F1EC] text-[#161513]" : "text-white/40"}`}>
+        <IcChart />
+        {page === "laporan" && <span>Laporan</span>}
+      </button>
+      <button onClick={() => onNav("akun")} className={`${base} ${page === "akun" ? "bg-[#F2F1EC] text-[#161513]" : "text-white/40"}`}>
+        <IcUser />
+        {page === "akun" && <span>Akun</span>}
+      </button>
     </nav>
   )
 }
