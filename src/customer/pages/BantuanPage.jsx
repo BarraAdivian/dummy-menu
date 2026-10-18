@@ -1,5 +1,58 @@
 import { useState } from "react";
-import { BottomNav } from "../components/ui";
+
+/* ───────── Ikon nav ───────── */
+const IcMenu = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className={className}>
+    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+    <path d="M7 2v20" />
+    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+  </svg>
+);
+
+const IcDoc = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className={className}>
+    <rect x="5" y="3" width="14" height="18" rx="2" />
+    <path d="M9 8h6M9 12h6M9 16h4" />
+  </svg>
+);
+
+const IcHelp = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.3-1 .9-1 1.7M12 17h.01" />
+  </svg>
+);
+
+/* ───────── Nav bawah gelap ───────── */
+function NavBawah({ page, go }) {
+  const tabs = [
+    ["menu", "Menu", <IcMenu key="a" className="h-[18px] w-[18px]" />],
+    ["pesanan", "Pesanan", <IcDoc key="b" className="h-[18px] w-[18px]" />],
+    ["bantuan", "Bantuan", <IcHelp key="c" className="h-[18px] w-[18px]" />],
+  ];
+
+  return (
+    <nav className="fixed inset-x-0 bottom-4 z-50 px-4">
+      <div className="mx-auto flex max-w-md justify-between rounded-full bg-[#161513] p-1.5 shadow-xl shadow-black/20">
+        {tabs.map(([id, label, icon]) => {
+          const aktif = page === id;
+          return (
+            <button
+              key={id}
+              onClick={() => go(id)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-full py-2.5 text-[11px] font-medium transition ${
+                aktif ? "bg-[#F2F1EC] text-[#161513]" : "text-white/60"
+              }`}
+            >
+              {icon}
+              {aktif && <span>{label}</span>}
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
 
 const FAQS = [
   {
@@ -89,7 +142,7 @@ export default function BantuanPage({ go }) {
         </div>
       </div>
 
-      <BottomNav active="bantuan" go={go} />
+      <NavBawah page="bantuan" go={go} />
     </div>
   );
 }

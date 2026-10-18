@@ -60,6 +60,7 @@ export default function App() {
       service,
       total: subtotal + tax + service,
       payment,
+      readyAt: Date.now() + 15 * 60 * 1000, // ⏱ dihitung siap 15 menit
     });
     setCart([]);
     setView("sukses");
@@ -67,7 +68,7 @@ export default function App() {
 
   const go = (id) => {
     if (id === "pesanan") {
-      setView(order ? "sukses" : "kosong");
+      setView(order ? "status" : "kosong"); // ← ada pesanan = halaman status
       return;
     }
     setView(id);
@@ -81,6 +82,8 @@ export default function App() {
     return <AllMenuPage go={go} openDetail={openDetail} cart={cart} />;
   if (view === "detail" && detailMenu)
     return <DetailPage menu={detailMenu} go={go} onAdd={pushItem} />;
+  if (view === "status")
+    return <OrdersPage go={go} order={order} />;
   if (view === "cart")
     return (
       <CartPage
