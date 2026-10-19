@@ -4,6 +4,7 @@ import AllMenuPage from "./pages/AllMenuPage";
 import DetailPage from "./pages/DetailPage";
 import CartPage from "./pages/CartPage";
 import SuccessPage from "./pages/SuccessPage";
+import QrisPage from "./pages/QrisPage";
 import OrdersPage from "./pages/OrdersPage";
 import BantuanPage from "./pages/BantuanPage";
 import { menus, defaultChoices, unitPrice, optionLabels, TAX, SERVICE } from "./data/menus";
@@ -48,27 +49,34 @@ export default function App() {
   const removeItem = (key) => setCart((prev) => prev.filter((i) => i.key !== key));
 
   // 🧾 Kirim → hitung pajak & layanan beneran
+  // QRIS → lewat halaman Scan & Bayar dulu, kasir → langsung sukses
   const kirim = (payment) => {
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const tax = Math.round(subtotal * TAX);
     const service = Math.round(subtotal * SERVICE);
     setOrder({
-      code: `LO-${Math.floor(1000 + Math.random() * 9000)}`,
+      code: String(Math.floor(Math.random() * 9000) + 1000),
       items: cart,
       subtotal,
       tax,
       service,
       total: subtotal + tax + service,
       payment,
-      readyAt: Date.now() + 15 * 60 * 1000, // ⏱ dihitung siap 15 menit
     });
     setCart([]);
+    setView(payment === "qris" ? "qris" : "sukses");
+  };
+
+  // Ganti metode ke kasir dari halaman QRIS
+  const bayarKasir = () => {
+    setOrder((o) => (o ? { ...o, payment: "kasir" } : o));
     setView("sukses");
   };
 
   const go = (id) => {
+    // Tab "Pesanan" SELALU buka halaman status baru
     if (id === "pesanan") {
-      setView(order ? "status" : "kosong"); // ← ada pesanan = halaman status
+      setView("status");
       return;
     }
     setView(id);
@@ -82,8 +90,6 @@ export default function App() {
     return <AllMenuPage go={go} openDetail={openDetail} cart={cart} />;
   if (view === "detail" && detailMenu)
     return <DetailPage menu={detailMenu} go={go} onAdd={pushItem} />;
-  if (view === "status")
-    return <OrdersPage go={go} order={order} />;
   if (view === "cart")
     return (
       <CartPage
@@ -94,7 +100,12 @@ export default function App() {
         onKirim={kirim}
       />
     );
-  if (view === "kosong") return <OrdersPage go={go} />;
+  // Halaman Scan & Bayar (QRIS)
+  if (view === "qris")
+    return <QrisPage go={go} order={order} onBayarKasir={bayarKasir} />;
+  // Halaman status pesanan baru (kosong / ada pesanan — dua-duanya di OrdersPage)
+  if (view === "status" || view === "kosong")
+    return <OrdersPage go={go} order={order} />;
   if (view === "sukses") return <SuccessPage go={go} order={order} />;
   if (view === "bantuan") return <BantuanPage go={go} />;
   return (

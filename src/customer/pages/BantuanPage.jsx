@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-/* ───────── Ikon nav ───────── */
+/* ───────── Ikon ───────── */
 const IcMenu = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className={className}>
     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
@@ -20,6 +20,34 @@ const IcHelp = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className={className}>
     <circle cx="12" cy="12" r="9" />
     <path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.3-1 .9-1 1.7M12 17h.01" />
+  </svg>
+);
+
+const IcBell = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+  </svg>
+);
+
+const IcArrow = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M5 12h14" />
+    <path d="m13 6 6 6-6 6" />
+  </svg>
+);
+
+const IcWifi = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className={className}>
+    <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+    <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+    <path d="M12 20h.01" />
+  </svg>
+);
+
+const IcChat = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" />
   </svg>
 );
 
@@ -56,85 +84,97 @@ function NavBawah({ page, go }) {
 
 const FAQS = [
   {
-    q: "Bagaimana cara bayar?",
+    q: "Cara bayar?",
     a: "Bayar di kasir setelah selesai makan, bisa tunai, debit, atau QRIS.",
   },
   {
-    q: "Bisa ubah pesanan yang sudah dikirim?",
+    q: "Ubah pesanan?",
     a: "Bisa, selama pesanan belum diproses dapur. Panggil pelayan untuk perubahan.",
   },
   {
-    q: "Berapa lama pesanan siap?",
+    q: "Berapa lama?",
     a: "Rata-rata 15-20 menit, tergantung antrian dapur.",
   },
 ];
 
 export default function BantuanPage({ go }) {
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState(null);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="mx-auto max-w-md pb-28">
-        <header className="flex items-center justify-between px-4 pt-4">
-          <h1 className="text-base font-extrabold text-gray-800">Bantuan</h1>
-          <span className="rounded-full bg-gray-300 px-3 py-1.5 text-[10px] font-bold text-gray-600">
-            Meja
+    <div className="min-h-screen bg-[#F2F1EC]">
+      <div className="mx-auto max-w-md px-5 pb-36 pt-6">
+        {/* Header */}
+        <header className="flex items-center justify-between">
+          <span className="font-serif text-[26px] leading-none text-[#161513]">Resto</span>
+          <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.25em] text-[#161513]">
+            <span className="h-1 w-1 rounded-full bg-[#161513]" />
+            Meja 04
           </span>
         </header>
 
-        {/* Hero */}
-        <section className="mx-4 mt-4 rounded-3xl bg-gray-700 p-5">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-lg">
-              🔔
+        {/* Judul */}
+        <h1 className="mt-7 text-[48px] font-serif leading-[1.05] tracking-tight text-[#161513]">
+          Ada yang
+          <br />
+          <span className="italic">bisa dibantu?</span>
+        </h1>
+
+        {/* Panggil pelayan */}
+        <button className="mt-6 flex h-48 w-full flex-col rounded-3xl bg-[#E7E5DF] p-5 text-left active:scale-[0.99]">
+          <div className="flex items-start justify-between">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#161513] text-[#F2F1EC]">
+              <IcBell className="h-5 w-5" />
             </span>
-            <div>
-              <p className="text-base font-extrabold text-white">Butuh sesuatu?</p>
-              <p className="text-[11px] text-white/60">Pelayan akan datang ke mejamu</p>
-            </div>
+            <span className="pt-2 text-[11px] uppercase tracking-[0.25em] text-black/40">1 tap</span>
           </div>
-          <button className="mt-4 w-full rounded-full bg-gray-300 py-3 text-sm font-extrabold text-gray-700 active:scale-[0.98]">
-            Panggil pelayan
-          </button>
-        </section>
+          <div className="mt-auto flex items-end justify-between">
+            <p className="font-serif text-[30px] leading-[1.1] text-[#161513]">
+              Panggil
+              <br />
+              pelayan
+            </p>
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#161513] text-[#F2F1EC]">
+              <IcArrow className="h-5 w-5" />
+            </span>
+          </div>
+        </button>
 
         {/* Permintaan cepat */}
-        <p className="mt-5 px-4 text-sm font-extrabold text-gray-800">Permintaan cepat</p>
-        <div className="mt-2.5 grid grid-cols-2 gap-3 px-4">
+        <div className="mt-3 grid grid-cols-2 gap-3">
           {[
-            ["🧾", "Minta tagihan", "Bayar di meja"],
-            ["🍴", "Alat makan", "Sendok, garpu, tisu"],
-            ["📶", "Info Wi-Fi", "Nama & kata sandi"],
-            ["💬", "Lainnya", "Tulis permintaan"],
-          ].map(([icon, t, d]) => (
-            <button key={t} className="rounded-2xl bg-white p-4 text-left active:scale-[0.97]">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-200 text-base">
-                {icon}
-              </span>
-              <p className="mt-3 text-sm font-bold text-gray-700">{t}</p>
-              <p className="mt-0.5 text-[11px] text-gray-400">{d}</p>
+            ["tagihan", "Tagihan", <IcDoc className="h-5 w-5" />],
+            ["alat", "Alat makan", <IcMenu className="h-5 w-5" />],
+            ["wifi", "Wi-Fi", <IcWifi className="h-5 w-5" />],
+            ["lain", "Lainnya", <IcChat className="h-5 w-5" />],
+          ].map(([id, t, icon]) => (
+            <button
+              key={id}
+              className="flex h-24 flex-col justify-between rounded-2xl bg-[#E7E5DF] p-4 text-left active:scale-[0.98]"
+            >
+              <span className="text-[#161513]">{icon}</span>
+              <span className="font-serif text-[19px] leading-none text-[#161513]">{t}</span>
             </button>
           ))}
         </div>
 
         {/* FAQ */}
-        <p className="mt-5 px-4 text-sm font-extrabold text-gray-800">Pertanyaan umum</p>
-        <div className="mx-4 mt-2.5 rounded-3xl bg-white px-4">
+        <p className="mt-8 text-[11px] uppercase tracking-[0.25em] text-black/40">Tanya jawab</p>
+        <div className="mt-1 divide-y divide-black/10 border-y border-black/10">
           {FAQS.map((f, i) => {
             const aktif = open === i;
             return (
-              <div key={f.q} className={i !== 0 ? "border-t border-gray-100" : ""}>
+              <div key={f.q}>
                 <button
                   onClick={() => setOpen(aktif ? null : i)}
-                  className="flex w-full items-center justify-between gap-3 py-4 text-left"
+                  className="flex w-full items-center justify-between py-4 text-left"
                 >
-                  <span className="text-sm font-bold text-gray-700">{f.q}</span>
-                  <span className={`text-gray-300 transition-transform ${aktif ? "rotate-180" : ""}`}>
-                    ⌄
+                  <span className="text-[15px] text-[#161513]">{f.q}</span>
+                  <span className="text-xl font-light leading-none text-black/35">
+                    {aktif ? "−" : "+"}
                   </span>
                 </button>
                 {aktif && (
-                  <p className="-mt-1 pb-4 text-xs leading-relaxed text-gray-400">{f.a}</p>
+                  <p className="-mt-1 pb-4 text-sm leading-relaxed text-black/45">{f.a}</p>
                 )}
               </div>
             );

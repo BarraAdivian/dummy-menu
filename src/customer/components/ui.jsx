@@ -109,7 +109,7 @@ export function MenuCard({ name, price, onClick }) {
 export function CartBar({ count, total, onClick }) {
   if (count === 0) return null;
   return (
-    <div className="fixed inset-x-0 bottom-[60px] z-40 px-4">
+    <div className="fixed inset-x-0 bottom-24 z-40 px-4">
       <div className="mx-auto max-w-md">
         <button
           onClick={onClick}
@@ -182,3 +182,4 @@ export function PillGroup({ label, options, value, onChange }) {
     </section>
   );
 }
+
