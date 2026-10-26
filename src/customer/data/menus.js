@@ -5,7 +5,7 @@ export const menus = [
     price: 42000,
     category: "Makanan",
     desc: "Lorem ipsum dolor sit amet consectetur risus aliquet amet negeri",
-    badge: "Lorem minggu ini",
+    badge: "Menu Favorite Minggu Ini",
     featured: true,
     favorite: true,
     options: [
